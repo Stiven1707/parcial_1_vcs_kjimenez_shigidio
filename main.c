@@ -1,6 +1,6 @@
 /*
  * @file
- * @author Erwin Meza Vega <emezav@gmail.com>
+ * @author Kevin Stiven Jimenez Perafan <kjimenez@unicauca.edu.co> Steben David Higidio <shigidio@unicauca.edu.co>
  * Sistema de Control de Versiones
  * Uso: 
  *      versions add ARCHIVO "Comentario" : Adiciona una version del archivo al repositorio
@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
 
 	if (argc == 4
 			&& EQUALS(argv[1], "add")) {
+		//if (add(argv[2], argv[3]) != VERSION_ADDED)
 		if (add(argv[2], argv[3]) == VERSION_ERROR) {
 			fprintf(stderr, "No se puede adicionar %s\n", argv[2]);
 		}

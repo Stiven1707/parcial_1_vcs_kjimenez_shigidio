@@ -31,6 +31,19 @@ void list(char * filename) {
 	//TODO implementar
 }
 
+
+int copy(char * source, char * destination) {
+	//TODO implementar
+
+}
+
+
+return_code get(char * filename, int version) {
+
+	//TODO implementar
+	return VERSION_DOES_NOT_EXIST;
+}
+
 char *get_file_hash(char * filename, char * hash) {
 	char *comando;
 	FILE * fp;
@@ -47,16 +60,4 @@ char *get_file_hash(char * filename, char * hash) {
 
 	return hash;
 
-}
-
-int copy(char * source, char * destination) {
-	//TODO implementar
-
-}
-
-
-return_code get(char * filename, int version) {
-
-	//TODO implementar
-	return VERSION_DOES_NOT_EXIST;
 }
