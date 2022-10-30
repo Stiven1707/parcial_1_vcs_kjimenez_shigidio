@@ -31,10 +31,43 @@ void list(char * filename) {
 	//TODO implementar
 }
 
-
+ /*
+ *@brief Se encarga de copiar el archivo indicado al sub directorio versions
+ *@param source la direccion del archivo fuente
+ *@param destination la direccion donde de va a copiar +/hash
+ *@return 1 si fue exitoso y 0 en caso contrario
+ */
 int copy(char * source, char * destination) {
-	//TODO implementar
+	
+	char *buff;
+	FILE *fsource;
+	FILE *fdestination;
+	//Abrir el archivo fuente
+	fsource=fopen(source,"r");
 
+	//Verificar si se pudo abrir
+	if(fsource!=NULL){
+		//Abrir el archivo destino
+		fdestination=fopen(destination,"w");
+		//Verificar si se pudo abrir
+		if(fdestination!=NULL){
+			//buff = (char*)malloc();
+			fread(&buff, sizeof(buff), 1, fsource);
+			while(!feof(fsource)){
+
+				fwrite(&buff, sizeof(buff), 1, fdestination);
+        		//buff = (char*)malloc();
+
+				fread(&buff, sizeof(buff), 1, fsource);
+			}
+		}
+
+		
+		fclose(fsource);
+		fclose(fdestination);
+	}else printf("\nError de apertura del archivo. \n\n");
+
+	return 0;
 }
 
 
