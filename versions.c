@@ -15,7 +15,7 @@ char *get_file_hash(char * filename, char * hash);
  * @param source Archivo fuente
  * @param destination Destino
  *
- * @return 1 en caso de exito, 0 si existe error.
+ * @return 1 en ca"hash"so de exito, 0 si existe error.
  */
 int copy(char * source, char * destination);
 
@@ -23,6 +23,13 @@ int copy(char * source, char * destination);
 
 return_code add(char * filename, char * comment) {
 	//TODO implementar
+	char* new;
+	new = (char*)malloc(strlen(VERSIONS_DIR)+strlen("hash"));
+	strcpy(new,VERSIONS_DIR);
+	strcat(new,"/hash.txt");
+	if(copy(filename,new)==0){
+		return VERSION_ADDED;
+	}
 	return VERSION_ERROR;
 }
 
@@ -51,18 +58,19 @@ int copy(char * source, char * destination) {
 		fdestination=fopen(destination,"w");
 		//Verificar si se pudo abrir
 		if(fdestination!=NULL){
-			//buff = (char*)malloc();
+			buff = (char*)malloc(LINEA_SIZE);
 			fread(&buff, sizeof(buff), 1, fsource);
+			//printf("%s -> LEN=%d\n",&buff,strlen(buff));
 			while(!feof(fsource)){
 
 				fwrite(&buff, sizeof(buff), 1, fdestination);
-        		//buff = (char*)malloc();
-
+        		buff = (char*)malloc(LINEA_SIZE);
 				fread(&buff, sizeof(buff), 1, fsource);
+				//printf("%s\n",&buff);
 			}
 		}
 
-		
+		free(buff);
 		fclose(fsource);
 		fclose(fdestination);
 	}else printf("\nError de apertura del archivo. \n\n");

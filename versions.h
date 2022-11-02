@@ -16,6 +16,7 @@
 
 #define COMMENT_SIZE BUFSIZ /** < Longitud del comentario */
 #define HASH_SIZE 65 /**< Longitud del hash incluyendo NULL*/
+#define LINEA_SIZE 1024 /**< Longitud de la linea que se leera*/
 
 #define VERSIONS_DB "versions.db" /**< Nombre de la base de datos de versiones. */
 #define VERSIONS_DIR ".versions" /**< Directorio del repositorio. */

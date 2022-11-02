@@ -26,7 +26,6 @@ int main(int argc, char *argv[]) {
 	if (stat(VERSIONS_DB_PATH, &s) != 0) {
 		creat(VERSIONS_DB_PATH, 0755);
 	}
-
 	if (argc == 4
 			&& EQUALS(argv[1], "add")) {
 		//if (add(argv[2], argv[3]) != VERSION_ADDED)
