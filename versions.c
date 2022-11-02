@@ -46,7 +46,10 @@ void list(char * filename) {
  */
 int copy(char * source, char * destination) {
 	
-	char *buff;
+	char buff[BUFSIZ];
+	size_t nread;
+	size_t nwrite;
+	//char *buff;
 	FILE *fsource;
 	FILE *fdestination;
 	//Abrir el archivo fuente
@@ -58,19 +61,16 @@ int copy(char * source, char * destination) {
 		fdestination=fopen(destination,"w");
 		//Verificar si se pudo abrir
 		if(fdestination!=NULL){
-			buff = (char*)malloc(LINEA_SIZE);
-			fread(&buff, sizeof(buff), 1, fsource);
-			//printf("%s -> LEN=%d\n",&buff,strlen(buff));
 			while(!feof(fsource)){
-
-				fwrite(&buff, sizeof(buff), 1, fdestination);
-        		buff = (char*)malloc(LINEA_SIZE);
-				fread(&buff, sizeof(buff), 1, fsource);
-				//printf("%s\n",&buff);
+				nread = fread(buff, sizeof(char), BUFSIZ, fsource);
+				if (nread>0)
+				{
+					nwrite = fwrite(buff, sizeof(char), nread, fdestination);
+				}
+				
 			}
 		}
 
-		free(buff);
 		fclose(fsource);
 		fclose(fdestination);
 	}else printf("\nError de apertura del archivo. \n\n");
