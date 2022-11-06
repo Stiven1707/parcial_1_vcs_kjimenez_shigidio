@@ -152,9 +152,12 @@ return_code get(char * filename, int version) {
 				strcpy(new,VERSIONS_DIR);
 				strcat(new,"/");
 				strcat(new,dversion.hash);
-printf("Dato 1: %s --- DAto2: %s", filename, dversion.filename);
-printf("\n %d \n", strcmp(filename, dversion.filename));
-int respuesta = strcmp(filename, dversion.filename);
+				printf("Dato 1: %s --- DAto2: %s", filename, dversion.filename);
+				printf("\n %d \n", strcmp(filename, dversion.filename));
+				int respuesta = strcmp(filename, dversion.filename);
+				if(&respuesta != 0){
+					printf("No existe");
+				}
 				if((copy(new, dversion.filename)==0) && respuesta == 0){
 					printf("La version %d del archivo %s se recupero correctamente.\n",version, dversion.filename);
 				}else{

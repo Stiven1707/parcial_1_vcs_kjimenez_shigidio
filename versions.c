@@ -19,6 +19,7 @@ char *get_file_hash(char * filename, char * hash);
  */
 int copy(char * source, char * destination);
 void add_version(file_version info);
+void imprimirDatos(file_version dversion, int version);
 
 
 return_code add(char * filename, char * comment) {
@@ -26,29 +27,50 @@ return_code add(char * filename, char * comment) {
 	file_version version;
 	char hash[HASH_SIZE];
 	char* new;
-	//Verifica si el archivo existe, se puede crear el hash y si es un archivo regular
-	//Obtener el hash del archivo
-	if(get_file_hash(filename,hash)==NULL){
-		return VERSION_ERROR;
+	
+	FILE *fsource;
+	fsource=fopen(VERSIONS_DB_PATH,"rb");
+	int resp = 0;
+	
+	if(fsource!=NULL){
+		file_version dversion;
+		
+		fread(&dversion, sizeof(file_version), 1, fsource);
+		while(!feof(fsource)){
+		
+			if(EQUALS(filename, dversion.filename)){
+				resp = 1;
+				break; 
+			}
+			fread(&dversion, sizeof(file_version), 1, fsource);
+		}
 	}
-	//Asigno memoria dinamicamente
-	new = (char*)malloc(sizeof(char)*(strlen(VERSIONS_DIR)+strlen(hash)+2));
-	//Nuevo nombre del archivo: .versions/ABCDEF....
-	//Construir la cadena
-	strcpy(new,VERSIONS_DIR);
-	strcat(new,"/");
-	strcat(new,hash);
-	//Copia el archivo al directorio .versions, adiciona el registro
-	if(copy(filename,new)==0){
-		strcpy(version.filename,filename);
-		strcpy(version.hash,hash);
-		strcpy(version.comment,comment);
-		//Adicionamos la version al archivo "versions.db"
-		add_version(version);
+	fclose(fsource);
+	if(!resp){
+		//Verifica si el archivo existe, se puede crear el hash y si es un archivo regular
+		//Obtener el hash del archivo
+		if(get_file_hash(filename,hash)==NULL){
+			return VERSION_ERROR;
+		}
+		//Asigno memoria dinamicamente
+		new = (char*)malloc(sizeof(char)*(strlen(VERSIONS_DIR)+strlen(hash)+2));
+		//Nuevo nombre del archivo: .versions/ABCDEF....
+		//Construir la cadena
+		strcpy(new,VERSIONS_DIR);
+		strcat(new,"/");
+		strcat(new,hash);
+		//Copia el archivo al directorio .versions, adiciona el registro
+		if(copy(filename,new)==0){
+			strcpy(version.filename,filename);
+			strcpy(version.hash,hash);
+			strcpy(version.comment,comment);
+			//Adicionamos la version al archivo "versions.db"
+			add_version(version);
+			free(new);
+			return VERSION_ADDED;
+		}
 		free(new);
-		return VERSION_ADDED;
 	}
-	free(new);
 	return VERSION_ERROR;
 }
 
@@ -56,25 +78,41 @@ return_code add(char * filename, char * comment) {
 void list(char * filename) {
 	FILE *fsource;
 	fsource=fopen(VERSIONS_DB_PATH,"rb");
-	
+	int bandera = 0;
 	if(fsource!=NULL){
 		file_version dversion;
 		
 		int contador = 1;
 		fread(&dversion, sizeof(file_version), 1, fsource);
 		while(!feof(fsource)){
-			printf("Version #%d\n",contador);
-			printf("Nombre del archivo: %s\n",dversion.filename);
-			printf("Hash: %s\n",dversion.hash);
-			printf("Comentario: %s\n\n",dversion.comment);
+			
+			if(filename != NULL){
+				if(EQUALS(dversion.filename, filename)){
+					imprimirDatos(dversion, contador);
+					bandera = 1;
+				}
+			}
+				
+			else
+				imprimirDatos(dversion, contador);
+					
 			
 			fread(&dversion, sizeof(file_version), 1, fsource);
 			contador++;
 		}
 	}
 	fclose(fsource);
+	if(!bandera){
+		printf("No hay registros del archivo '%s' en la base de datos!!\n", filename);
+	}
 }
 
+void imprimirDatos(file_version dversion, int version){
+	printf("Version #%d\n",version);
+	printf("Nombre del archivo: %s\n",dversion.filename);
+	printf("Hash: %s\n",dversion.hash);
+	printf("Comentario: %s\n\n",dversion.comment);
+}
  /*
  *@brief Se encarga de copiar el archivo indicado al sub directorio versions
  *@param source la direccion del archivo fuente
@@ -152,26 +190,20 @@ return_code get(char * filename, int version) {
 				strcpy(new,VERSIONS_DIR);
 				strcat(new,"/");
 				strcat(new,dversion.hash);
-printf("Dato 1: %s --- DAto2: %s", filename, dversion.filename);
-printf("\n %d \n", strcmp(filename, dversion.filename));
-int respuesta = strcmp(filename, dversion.filename);
-				if((copy(new, dversion.filename)==0) && respuesta == 0){
+
+				if(EQUALS(filename, dversion.filename)){
+					copy(new, dversion.filename);
 					printf("La version %d del archivo %s se recupero correctamente.\n",version, dversion.filename);
-				}else{
-					printf("No existe la version #d del archivo %s",version, dversion.filename);
-				}
+					return VERSION_RETRIEVED;
+				}else
+					break;
 			}
 			
 			fread(&dversion, sizeof(file_version), 1, fsource);
 			contador++;
 		}
-		contador--;
-		if(contador < version){
-			printf("No existe la version %d del archivo\n",version);
-		}
 	}
 	fclose(fsource);
-	
 	return VERSION_DOES_NOT_EXIST;
 }
 
