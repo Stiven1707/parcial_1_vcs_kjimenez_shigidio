@@ -1,4 +1,4 @@
-/*
+/**
  * @file
  * @author Kevin Stiven Jimenez Perafan <kjimenez@unicauca.edu.co> 
  * @author Steben David Higidio <shigidio@unicauca.edu.co>
