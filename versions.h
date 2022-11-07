@@ -38,7 +38,8 @@ typedef struct {
 	char comment[COMMENT_SIZE];	   /**< Comentario del usuario. */
 }file_version;
 
-
+/** @brief codigos que indican el estado de la operacion add
+*/
 typedef enum {
 	VERSION_ERROR,
 	VERSION_CREATED,

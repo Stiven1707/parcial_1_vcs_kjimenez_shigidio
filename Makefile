@@ -26,3 +26,12 @@ install: all
 uninstall:
 	sudo rm -f /usr/local/bin/versions
 
+save:
+	make all
+	./versions add versions.c "Guardar copia"
+	./versions add versions.h "Guardar copia"
+	./versions add sha256.c "Guardar copia"
+	./versions add sha256.h "Guardar copia"
+	./versions add main.c "Guardar copia"
+	./versions add README.txt "Guardar copia"
+	

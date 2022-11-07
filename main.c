@@ -1,6 +1,8 @@
 /*
  * @file
- * @author Kevin Stiven Jimenez Perafan <kjimenez@unicauca.edu.co> Steben David Higidio <shigidio@unicauca.edu.co>
+ * @author Kevin Stiven Jimenez Perafan <kjimenez@unicauca.edu.co> 
+ * @author Steben David Higidio <shigidio@unicauca.edu.co>
+ * @author Michael Stevens Diaz Beltran <Micheldiaz@unicauca.edu.co>
  * Sistema de Control de Versiones
  * Uso: 
  *      versions add ARCHIVO "Comentario" : Adiciona una version del archivo al repositorio
@@ -47,8 +49,9 @@ int main(int argc, char *argv[]) {
 			fprintf(stderr, "Numero de version invalido\n");
 			exit(EXIT_FAILURE);
 		}
-		if (!get(argv[3], version)) {
-			fprintf(stderr, "No se puede obtener la version %d de %s\n", version, argv[3]);
+		if (get(argv[3], version) == VERSION_DOES_NOT_EXIST) {
+			fprintf(stderr, "La version %d del archivo %s no existe en la base de datos\n", version, argv[3]);
+			//fprintf(stderr, "No se puede obtener la version %d de %s\n", version, argv[3]);
 			exit(EXIT_FAILURE);
 		}
 	}else {
