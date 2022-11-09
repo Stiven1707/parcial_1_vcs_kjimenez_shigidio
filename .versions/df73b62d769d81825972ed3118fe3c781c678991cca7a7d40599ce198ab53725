@@ -100,6 +100,7 @@ void list(char *filename)
 	FILE *fsource;
 	// Abrir el archivo
 	fsource = fopen(VERSIONS_DB_PATH, "rb");
+	int bandera = 0;
 	int contador = 0;
 	// verifica si se pudo abrir
 	if (fsource != NULL)
@@ -232,6 +233,7 @@ return_code get(char *filename, int version)
 					strcat(new, dversion.hash);
 					// busca el archivo y la version solicitada
 					copy(new, dversion.filename);
+					printf("hash: %s", dversion.hash);
 					printf("La version %d del archivo %s se recupero correctamente.\n", version, dversion.filename);
 					return VERSION_RETRIEVED;
 				}

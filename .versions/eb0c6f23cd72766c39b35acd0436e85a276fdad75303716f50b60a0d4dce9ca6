@@ -100,6 +100,7 @@ void list(char *filename)
 	FILE *fsource;
 	// Abrir el archivo
 	fsource = fopen(VERSIONS_DB_PATH, "rb");
+	int bandera = 0;
 	int contador = 0;
 	// verifica si se pudo abrir
 	if (fsource != NULL)
@@ -132,7 +133,7 @@ void list(char *filename)
 		}
 	}
 	fclose(fsource);
-	if (contador == 0)
+	if (contador == 2)
 	{
 		printf("No hay registros del archivo '%s' en la base de datos!!\n", filename);
 	}
@@ -141,7 +142,7 @@ void list(char *filename)
 void imprimirDatos(file_version dversion, int version)
 {
 	// Imprime la verion, nombre,Hash y comentario de la estructura
-	if(version >= 1)printf("Version #%d\n", version);
+	printf((version >= 1)?"Version #%d\n", version: "");
 	printf("Nombre del archivo: %s\n", dversion.filename);
 	printf("Hash: %s\n", dversion.hash);
 	printf("Comentario: %s\n\n", dversion.comment);
@@ -220,25 +221,27 @@ return_code get(char *filename, int version)
 		while (!feof(fsource))
 		{
 
-			if (EQUALS(filename, dversion.filename))
+			if (contador == version)
+			{
+				new = (char *)malloc(sizeof(char) * (strlen(VERSIONS_DIR) + strlen(dversion.hash) + 2));
+				// Nuevo nombre del archivo: .versions/ABCDEF....
+				// Construir la cadena
+				strcpy(new, VERSIONS_DIR);
+				strcat(new, "/");
+				strcat(new, dversion.hash);
+				// busca el archivo y la version solicitada
+				if (EQUALS(filename, dversion.filename))
 				{
-				if (contador == version)
-				{
-					new = (char *)malloc(sizeof(char) * (strlen(VERSIONS_DIR) + strlen(dversion.hash) + 2));
-					// Nuevo nombre del archivo: .versions/ABCDEF....
-					// Construir la cadena
-					strcpy(new, VERSIONS_DIR);
-					strcat(new, "/");
-					strcat(new, dversion.hash);
-					// busca el archivo y la version solicitada
 					copy(new, dversion.filename);
 					printf("La version %d del archivo %s se recupero correctamente.\n", version, dversion.filename);
 					return VERSION_RETRIEVED;
 				}
-				contador++;
+				else
+					break;
 			}
 			// Realiza la lectura
 			fread(&dversion, sizeof(file_version), 1, fsource);
+			contador++;
 		}
 	}
 	fclose(fsource);

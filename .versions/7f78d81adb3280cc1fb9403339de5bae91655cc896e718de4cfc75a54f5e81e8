@@ -100,6 +100,7 @@ void list(char *filename)
 	FILE *fsource;
 	// Abrir el archivo
 	fsource = fopen(VERSIONS_DB_PATH, "rb");
+	int bandera = 0;
 	int contador = 0;
 	// verifica si se pudo abrir
 	if (fsource != NULL)

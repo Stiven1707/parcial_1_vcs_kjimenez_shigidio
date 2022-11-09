@@ -100,6 +100,7 @@ void list(char *filename)
 	FILE *fsource;
 	// Abrir el archivo
 	fsource = fopen(VERSIONS_DB_PATH, "rb");
+	int bandera = 0;
 	int contador = 0;
 	// verifica si se pudo abrir
 	if (fsource != NULL)
@@ -220,25 +221,27 @@ return_code get(char *filename, int version)
 		while (!feof(fsource))
 		{
 
-			if (EQUALS(filename, dversion.filename))
+			if (contador == version)
+			{
+				new = (char *)malloc(sizeof(char) * (strlen(VERSIONS_DIR) + strlen(dversion.hash) + 2));
+				// Nuevo nombre del archivo: .versions/ABCDEF....
+				// Construir la cadena
+				strcpy(new, VERSIONS_DIR);
+				strcat(new, "/");
+				strcat(new, dversion.hash);
+				// busca el archivo y la version solicitada
+				if (EQUALS(filename, dversion.filename))
 				{
-				if (contador == version)
-				{
-					new = (char *)malloc(sizeof(char) * (strlen(VERSIONS_DIR) + strlen(dversion.hash) + 2));
-					// Nuevo nombre del archivo: .versions/ABCDEF....
-					// Construir la cadena
-					strcpy(new, VERSIONS_DIR);
-					strcat(new, "/");
-					strcat(new, dversion.hash);
-					// busca el archivo y la version solicitada
 					copy(new, dversion.filename);
 					printf("La version %d del archivo %s se recupero correctamente.\n", version, dversion.filename);
 					return VERSION_RETRIEVED;
 				}
-				contador++;
+				else
+					break;
 			}
 			// Realiza la lectura
 			fread(&dversion, sizeof(file_version), 1, fsource);
+			contador++;
 		}
 	}
 	fclose(fsource);
