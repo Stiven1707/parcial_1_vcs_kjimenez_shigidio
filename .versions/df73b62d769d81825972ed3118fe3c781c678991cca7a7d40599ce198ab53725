@@ -233,6 +233,7 @@ return_code get(char *filename, int version)
 					strcat(new, dversion.hash);
 					// busca el archivo y la version solicitada
 					copy(new, dversion.filename);
+					printf("hash: %s", dversion.hash);
 					printf("La version %d del archivo %s se recupero correctamente.\n", version, dversion.filename);
 					return VERSION_RETRIEVED;
 				}
